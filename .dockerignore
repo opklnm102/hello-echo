@@ -1,6 +1,9 @@
+# go
 vendor/
 
+# git
 .git/
 .gitignore
 
+# docker
 Dockerfile
