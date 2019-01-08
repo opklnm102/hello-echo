@@ -33,7 +33,7 @@ deploy:
       condition: $TRAVIS_BRANCH != master
     skip_cleanup: true
   - provider: script
-    script: bash test
+    script: bash build
     on:
       all_branches: true
   - provider: script
