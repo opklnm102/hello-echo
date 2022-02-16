@@ -8,4 +8,9 @@ vendor/
 # docker
 Dockerfile
 
+bin/
 coverage.txt
+
+Makefile
+README.md
+go.test.sh

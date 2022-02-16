@@ -1,23 +1,25 @@
-FROM golang:1.11.4 AS builder
+FROM golang:1.17-alpine AS builder
 
 LABEL maintainer="Hue Kim <opklnm102@gmail.com>"
 
-ENV DEP_VERSION v0.5.0 
+WORKDIR /app
 
-RUN curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/${DEP_VERSION}/dep-linux-amd64 && chmod +x /usr/local/bin/dep
+COPY go.mod go.sum ./
+RUN go mod download
 
-RUN mkdir -p /go/src/github.com/opklnm102/echo-sample
-WORKDIR /go/src/github.com/opklnm102/echo-sample
+COPY . .
 
-# COPY Gopkg.toml Gopkg.lock ./
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -a -installsuffix cgo -o /hello-echo cmd/server/main.go
 
-COPY ./ ./
+FROM gcr.io/distroless/static AS runner
 
-RUN dep ensure -vendor-only -v
+WORKDIR /home/nonroot
 
-RUN go build -o app ./
+USER nonroot:nonroot
 
-# echo port
+COPY --from=builder /hello-echo ./
+
 EXPOSE 1324
 
-CMD ["./app"]
+CMD ["./hello-echo"]
