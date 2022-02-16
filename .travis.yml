@@ -1,23 +1,15 @@
 language: go
 go:
-  - 1.11.x
+  - 1.17.x
 
-# internal package import시 사용
-go_import_path: github.com/opklnm102/echo-sample
+go_import_path: github.com/opklnm102/hello-echo
   
-env:
-  - DEP_VERSION="0.5.0"
-
 # cache:
 #  directories:
 #    - ${TRAVIS_BUILD_DIR}/vendor
 
-before_install:
-  - curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 -o $GOPATH/bin/dep
-  - chmod +x $GOPATH/bin/dep
-
 install:
-  - dep ensure
+  - go mod download
 
 script:
   - ./go.test.sh
